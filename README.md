@@ -1,27 +1,24 @@
-# Livraria API
+# Livraria API (Acervo & Cia)
 
-API REST para gerenciar livros, feita com Python e FastAPI.
-Os dados ficam salvos em um arquivo JSON.
-
+API REST para gerenciar livros feita com **Python** e **FastAPI**, organizada em arquitetura modular (`routers`, `schemas`, `database`) e integrada a uma interface web (**Acervo & Cia – Catálogo da Livraria**).
 
 ## O que a API faz
 
 Rotas disponíveis:
 
-- GET /books: lista todos os livros
-- GET /books/{id}: busca um livro pelo id
-- POST /books: cria um livro novo
-- PUT /books/{id}: troca o livro inteiro
-- PATCH /books/{id}: muda só uma parte do livro
-- DELETE /books/{id}: apaga um livro
+- `GET /books`: lista todos os livros
+- `GET /books/{id}`: busca um livro pelo `id`
+- `POST /books`: cria um livro novo
+- `PUT /books/{id}`: atualiza o livro inteiro
+- `PATCH /books/{id}`: atualiza parcialmente um livro
+- `DELETE /books/{id}`: remove um livro
 
-Erros possíveis:
+Erros tratados:
 
-- 404: o livro não existe
-- 422: os dados enviados estão no formato errado
+- `404`: livro não encontrado
+- `422`: dados enviados fora do formato esperado
 
-
-## Exemplo de livro
+### Exemplo de payload
 
 ```json
 {
@@ -31,78 +28,61 @@ Erros possíveis:
 }
 ```
 
-
 ## Tecnologias
 
-- Python 3
-- FastAPI
-- Pydantic
-- Uvicorn
-
+- **Python 3**
+- **FastAPI** & **Uvicorn**
+- **Pydantic** (validação de dados)
+- **HTML, CSS e JavaScript** (interface web servida via `StaticFiles` com CORS configurado)
 
 ## Estrutura do projeto
 
 ```text
-Livraria/
-├── main.py              (ponto de entrada da aplicação)
-├── books.json           (dados salvos em JSON)
-├── requirements.txt     (dependências do projeto)
+Livraria-api/
+├── main.py                  # Ponto de entrada FastAPI, CORS e StaticFiles
+├── books.json               # Persistência em JSON
+├── requirements.txt         # Dependências do projeto
+├── frontend/                # Interface web (Acervo & Cia)
+│   ├── index.html
+│   ├── app.js
+│   └── style.css
 ├── schemas/
-│   └── book_schema.py   (modelos Pydantic, validam os dados)
+│   └── book_schema.py       # Modelos Pydantic
 ├── database/
-│   └── book_db.py       (lê e grava o arquivo JSON)
+│   └── book_db.py           # Leitura e gravação no arquivo JSON
 └── routers/
-    └── book_router.py   (rotas da API)
+    └── book_router.py       # Rotas da API (/books)
 ```
-
 
 ## Como executar
 
 1. Clone o repositório e entre na pasta:
-
-```bash
-git clone https://github.com/joaogabriel586/Livraria-api.git
-cd Livraria-api
-```
+   ```bash
+   git clone https://github.com/joaogabriel586/Livraria-api.git
+   cd Livraria-api
+   ```
 
 2. Crie e ative o ambiente virtual:
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
 
 3. Instale as dependências:
-
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 4. Inicie o servidor:
+   ```bash
+   uvicorn main:app --reload
+   ```
 
-```bash
-uvicorn main:app --reload
-```
-
-5. Abra a documentação interativa e teste as rotas:
-
-http://127.0.0.1:8000/docs
-
-
-## Chamando a API com Python
-
-Com o servidor ligado, crie outro arquivo (por exemplo, teste.py):
-
-```python
-import requests
-
-resposta = requests.get("http://127.0.0.1:8000/books")
-print(resposta.status_code)
-print(resposta.json())
-```
-
+5. Acesse no navegador:
+   - Interface web: `http://127.0.0.1:8000/`
+   - Documentação interativa (Swagger): `http://127.0.0.1:8000/docs`
 
 ## Próximos passos
 
-- Trocar o arquivo JSON por um banco de dados (SQLite)
-- Criar uma interface para a API
+- Migrar a persistência em JSON (`books.json`) para banco de dados relacional (**SQLite** / **PostgreSQL**)
+- Adicionar testes automatizados de rotas com `pytest`
